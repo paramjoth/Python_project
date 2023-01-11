@@ -8,7 +8,6 @@
 #Output: false
 #incomplete
 from itertools import combinations
-
 def StringScramble(str1,str2):
     str1_len = len(str1)
     str2_len = len(str2)
