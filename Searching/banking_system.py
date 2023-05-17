@@ -8,9 +8,8 @@ def solution(queries):
             account_id = query[2]
             timestamp = int(query[1])
             if account_id not in accounts:
-                accounts[account_id] = {"balance": 0, "timestamp": timestamp, "total_trans": 0}
+                accounts[account_id] = {"balance": 0, "timestamp": timestamp}
                 output.append("true")
-                print(accounts)
             else:
                 output.append("false")
         elif operation == "DEPOSIT":
@@ -20,9 +19,7 @@ def solution(queries):
             if account_id in accounts:
                 accounts[account_id]["balance"] += amount
                 accounts[account_id]["timestamp"] = timestamp
-                accounts[account_id]["total_trans"] += 1
                 output.append(str(accounts[account_id]["balance"]))
-                print(accounts)
             else:
                 #account_id = query[2]
                 #accounts[account_id] = {"balance": 0, "timestamp": timestamp}
@@ -38,18 +35,26 @@ def solution(queries):
                 if accounts[account_id]["balance"] >= amount:
                     accounts[account_id]["balance"] -= amount
                     accounts[account_id]["timestamp"] = timestamp
-                    accounts[account_id]["total_trans"] += 1
                     output.append(str(accounts[account_id]["balance"]))
-                    print(accounts)
                 else:
                     output.append("")
             else:
                 output.append("")
-        elif operation == "RANKING":
-            res = sorted(accounts.items(), key=lambda x: x[1]['total_trans'], reverse=True)
-            output.append(str(res))
     return output
 
+
+queries = [
+  ["CREATE_ACCOUNT", "1", "account1"],
+  ["CREATE_ACCOUNT", "2", "account1"],
+  ["CREATE_ACCOUNT", "3", "account2"],
+  ["DEPOSIT", "4", "non-existing", "2700"],
+  ["DEPOSIT", "5", "account1", "2700"],
+  ["PAY", "6", "non-existing", "2700"],
+  ["PAY", "7", "account1", "2701"],
+  ["PAY", "8", "account1", "200"]
+]
+
+print(solution(queries))
 
 queries2= [
     [
@@ -215,9 +220,6 @@ queries2= [
         "31",
         "acc3",
         "111"
-    ],
-    [
-        "RANKING"
     ]
 ]
 

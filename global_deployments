@@ -1,0 +1,16 @@
+for the global deploy (load_etl repo only), here are the steps:
+
+1. split the k8s/beta/02-deployment.yaml into three equal-sized chunks. You can do this in linux command line with split . for example
+    split -l 12000 02-deployment.yaml segment. this will output three files segment.aa, segment.ab, segment.ac make sure that each segment file ends with the full mls config, so you may have to cut paste the last partial mls in segment.aa and put it at the top of segment.bb
+
+2. run vim regex replace on each of the segment files so that the docker image tag is the latest deployed tag from your PR
+    %s/\v(.*image:.*:)(.*-.*)/\1$DOCKER_IMAGE_TAG
+    %s/\v(.*build-number.*:\s)('.*-.*')/\1'$DOCKER_IMAGE_TAG'
+    you can then replace $DOCKER_IMAGE_TAG with the actual tag
+    so at the end of this step your segment.aa, segment.bb, segment.cc should have the latest tag
+
+3. copy segment.aa contents are replace the same lines in 02-deployment.yaml.
+
+4. push the first segment in 02-deployment.yaml to master to deploy your changes on 1/3 of the mlses
+
+5. repeat for segment 2, then 3
